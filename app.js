@@ -12,7 +12,7 @@ function dateFormat(d) {
   ].join('-');
 }
 
-app.use(function(req, res, next) { console.log(req.url); next();})
+app.use(function(req, res, next) { console.log(req.url); next();});
 app.use(express.static('./public/'));
 
 app.get('/api/all', function(req, res) {
@@ -33,8 +33,8 @@ app.get('/api/:symbol/', function(req, res) {
     else {
       res.status(500).send(err);
     }
-  })
-})
+  });
+});
 
 app.listen(8080, function(req, res, next) {
   console.log('Listening on: 8080...');
