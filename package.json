@@ -1,0 +1,26 @@
+{
+  "name": "strack",
+  "version": "1.0.0",
+  "description": "stra.ck is intended to be a visual representation of your holdings/watch-listings with easy sorting functionality.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/treezrppl2/strack.git"
+  },
+  "author": "Nathan Walston",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/treezrppl2/strack/issues"
+  },
+  "homepage": "https://github.com/treezrppl2/strack#readme",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "gulp": "^3.9.1",
+    "request": "^2.69.0",
+    "yahoo-finance": "^0.2.12"
+  }
+}
