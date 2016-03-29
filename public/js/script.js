@@ -1,6 +1,6 @@
 var getData = new Promise(function(resolve, reject) {
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', '/api/all');
+  xhr.open('GET', '/data/bulk');
   xhr.addEventListener('error', function(message) {
     reject(message);
   });
@@ -16,30 +16,9 @@ var getData = new Promise(function(resolve, reject) {
 })
 
 getData.then(function(data) {
-  Promise.all(data.map(symbolPromises))
-  .then(function(values) {
-    console.log(values);
+  data.forEach(function(symbol) {
+    var p = document.createElement('p');
+    p.textContent = symbol;
+    document.body.appendChild(p);
   });
 });
-
-// this acts on 500+ symbols
-// perhaps a bulk transaction
-// is necessary
-function symbolPromises(symbol) {
-  return new Promise(function(resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/api/' + symbol);
-    xhr.addEventListener('error', function(message) {
-      reject(message)
-    });
-    xhr.send();
-    xhr.addEventListener('load', function() {
-      if (xhr.status == 200) {
-        resolve(JSON.parse(xhr.responseText));
-      }
-      else {
-        reject(xhr.status);
-      }
-    });
-  });
-};
