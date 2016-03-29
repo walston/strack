@@ -28,22 +28,31 @@ getData.then(function(data) {
 
 function makeTicker(ticker) {
   var container = document.createElement('div');
-  var sym = document.createElement('p');
+  var panel = document.createElement('div');
+  var panelHead = document.createElement('div');
+  var panelBody = document.createElement('div');
+  var sym = document.createElement('span');
   var name = document.createElement('p');
-  var ask = document.createElement('p');
+  var ask = document.createElement('span');
 
-  container.classList.add('col-xs-3');
+  container.classList.add('col-sm-3', 'col-xs-4');
+  panel.classList.add('panel', 'panel-default');
+  panelHead.classList.add('panel-heading');
+  panelBody.classList.add('panel-body');
   sym.classList.add('h3');
   name.classList.add('h5');
   ask.classList.add('h6');
 
   sym.textContent = ticker.symbol;
   name.textContent = ticker.name;
-  ask.textContent = ticker.ask;
+  ask.textContent = 'ask: ' + ticker.ask;
 
-  container.appendChild(sym);
-  container.appendChild(name);
-  container.appendChild(ask);
+  panelHead.appendChild(sym);
+  panelBody.appendChild(name);
+  panelBody.appendChild(ask);
+  panel.appendChild(panelHead);
+  panel.appendChild(panelBody);
+  container.appendChild(panel);
 
   return container;
 }

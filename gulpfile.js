@@ -18,7 +18,7 @@ gulp.task('server', function() {
       gulp.log('Error detected, waiting for changes...');
     }
   });
-})
+});
 
 gulp.task('debugServer', function() {
   if (node) node.kill();
@@ -28,7 +28,7 @@ gulp.task('debugServer', function() {
       gulp.log('Error detected, waiting for changes...');
     }
   });
-})
+});
 
 process.on('exit', function() {
   if (node) node.kill();
