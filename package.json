@@ -20,6 +20,7 @@
     "body-parser": "^1.15.0",
     "csv": "^0.4.6",
     "express": "^4.13.4",
+    "file-exists": "^1.0.0",
     "gulp": "^3.9.1",
     "request": "^2.69.0",
     "yahoo-finance": "^0.2.12"
