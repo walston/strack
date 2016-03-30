@@ -53,6 +53,9 @@ function Portfolio () {
   }
 
   function current(stocks) {
+    if (stocks == 'all') {
+      return JSON.parse(fs.readFileSync('./db').toString('utf8'))
+    }
     if (!Array.isArray(stocks)) { stocks = new Array(stocks) };
     return stocks.map(function(stock) {
       return queryDB(stock);

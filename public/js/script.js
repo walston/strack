@@ -4,12 +4,12 @@ var getData = new Promise(function(resolve, reject) {
     symbols: ['aapl', 'zion', 'cnx', 'mat']
   }
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', '/data/bulk');
+  xhr.open('GET', '/fetch/all');
   xhr.addEventListener('error', function(message) {
     reject(message);
   });
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(JSON.stringify(payload));
+  // xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send();
   xhr.addEventListener('load', function() {
     if (xhr.status == 200) {
       resolve(JSON.parse(xhr.responseText));
