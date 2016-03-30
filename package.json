@@ -24,5 +24,9 @@
     "gulp": "^3.9.1",
     "request": "^2.69.0",
     "yahoo-finance": "^0.2.12"
+  },
+  "devDependencies": {
+    "gulp-eslint": "^2.0.0",
+    "gulp-nodemon": "^2.0.6"
   }
 }
