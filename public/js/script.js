@@ -35,7 +35,7 @@ function makeTicker(ticker) {
   var name = document.createElement('p');
   var ask = document.createElement('span');
 
-  container.classList.add('col-sm-3', 'col-xs-4');
+  container.classList.add('col-sm-3', 'col-xs-4', 'ticker');
   panel.classList.add('panel', 'panel-default');
   panelHead.classList.add('panel-heading');
   panelBody.classList.add('panel-body');
