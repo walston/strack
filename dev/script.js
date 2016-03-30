@@ -42,7 +42,7 @@ function updateFeed(data) {
   });
 }
 
-function sortData(param, data) {
+function sortData(param, data, descending) {
   param = param.toLowerCase();
   data = _.sortBy(data, function(ticker) {
     if (!ticker[param]) return null;
@@ -51,10 +51,12 @@ function sortData(param, data) {
     }
     else if (typeof ticker[param] == 'string') {
       return ticker[param].toLowerCase();
-    } else {
+    }
+    else {
       return null;
     }
   });
+  if (descending === true) data.reverse();
   updateFeed(data)
 }
 
