@@ -1,4 +1,5 @@
 var feed = document.getElementById('feed');
+var lastData;
 
 function makeTicker(ticker) {
   var container = document.createElement('div');
@@ -32,12 +33,20 @@ function makeTicker(ticker) {
 }
 
 function updateFeed(data) {
+  lastData = data;
   while(feed.firstChild) {
     feed.removeChild(feed.firstChild);
   };
   data.forEach(function(ticker) {
     feed.appendChild(makeTicker(ticker));
   });
+}
+
+function sortData(parameter, data) {
+  data = _.sortBy(data, function(ticker) {
+    return Number.parseInt(ticker.ask);
+  });
+  updateFeed(data)
 }
 
 document.getElementById('search').addEventListener('submit', function(e) {
