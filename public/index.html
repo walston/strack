@@ -6,9 +6,15 @@
     <link rel="stylesheet" media="screen" href="css/style.css">
   </head>
   <body>
-    <nav class="navbar">
+    <nav class="navbar navbar-inverse">
       <div class="container">
-        <p>&nbsp;</p>
+        <form class="navbar-form navbar-right" id="search">
+          <div class="form-group">
+            <label class="sr-only" for="searchInput">Search:</label>
+            <input class="form-control" id="searchInput" name="searchInput" type="search" placeholder="Search...">
+            <input class="btn btn-success" type="submit" name="submit" value="🔎">
+          </div><!-- /.form-group -->
+        </form>
       </div><!-- /.container -->
     </nav>
     <div class="container">
