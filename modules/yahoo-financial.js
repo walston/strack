@@ -23,7 +23,6 @@ function makeTicker(symbol, name, ask, bid, open) {
 function Portfolio () {
   function build(stocks) {
     if (!Array.isArray(stocks)) { stocks = new Array(stocks) };
-
     if ( !fileExists(DB_PATH) || fs.statSync(DB_PATH).mtime < (Date.now() - 180000)) {
       request.get(YAHOO_FINANCE_URL +
         '?s=' + stocks.join('+') +
@@ -45,7 +44,6 @@ function Portfolio () {
   }
 
   function makeDB(data) {
-
     fs.writeFile(DB_PATH, JSON.stringify(data),
       (err) => { if (err) throw err }
     );
@@ -72,8 +70,8 @@ function Portfolio () {
     var db = JSON.parse(fs.readFileSync(DB_PATH).toString('utf8'))
     return und.filter(db, function(stock) {
       return und.find(query, function(symbol) {
-        console.log(symbol + ' == ' + stock.symbol);
-        return (new RegExp(symbol, 'gi')).test(stock.symbol);
+        var sym = (new RegExp(symbol, 'gi'));
+        return sym.test(stock.symbol) || sym.test(stock.name);
       })
     });
   }
