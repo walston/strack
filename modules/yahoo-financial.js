@@ -4,10 +4,10 @@ var fileExists = require('file-exists');
 var csv = require('csv');
 csv.parse = require('csv-parse/lib/sync');
 
-const maxSymbolsPerCall = 200;
-const yahooFinanceURL = 'http://download.finance.yahoo.com/d/quotes.csv'; // s=:stocks & f=:datapoints
-const yahooHistoricalURL = 'http://ichart.finance.yahoo.com/table.csv?s=AAPL&c=1962'; // s=:stock & c=:time
-const datapoints = 'snabo';
+const DB_PATH = './db';
+const YAHOO_FINANCE_URL = 'http://download.finance.yahoo.com/d/quotes.csv'; // s=:stocks & f=:DATAPOINTS
+const YAHOO_HISTORICAL_URL = 'http://ichart.finance.yahoo.com/table.csv?s=AAPL&c=1962'; // s=:stock & c=:time
+const DATAPOINTS = 'snabo';
 
 function makeTicker(symbol, name, ask, bid, open) {
   return {
@@ -21,28 +21,33 @@ function makeTicker(symbol, name, ask, bid, open) {
 
 function Portfolio () {
   function build(stocks) {
-    if (!Array.isArray(stocks)) { stocks = new Array(s) };
-    // API calls to Yahoo! finance of more than 200 will error
-    if (stocks.length > 200) {/* split stocks up */}
+    if (!Array.isArray(stocks)) { stocks = new Array(stocks) };
 
-    var qs = '?s=' + stocks + '&f=' + datapoints;
-    if ( !fileExists('./db') || fs.statSync('./db').mtime < (Date.now() - 180000)) {
-      request.get({
-        uri: yahooFinanceURL + qs
-      }, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-          var jsonDatabase = csv.parse(body).map(function(datum) {
-            return makeTicker.apply(new Object(), datum);
-          });
-          fs.writeFile('./db', JSON.stringify(jsonDatabase), function(err) {
-            if (err) throw err;
-          });
-        }
-        else {
-          data = error;
-        }
-      });
+    if ( !fileExists(DB_PATH) || fs.statSync(DB_PATH).mtime < (Date.now() - 180000)) {
+      request.get(YAHOO_FINANCE_URL +
+        '?s=' + stocks.join('+') +
+        '&f=' + DATAPOINTS ,
+        apiHandler);
     }
+  }
+
+  function apiHandler(error, response, raw) {
+    if (!error && response.statusCode == 200) {
+      var data = csv.parse(raw).map(function(datum) {
+        return makeTicker.apply(new Object(), datum);
+      });
+      makeDB(data)
+    }
+    else {
+      data = error;
+    }
+  }
+
+  function makeDB(data) {
+
+    fs.writeFile(DB_PATH, JSON.stringify(data),
+      (err) => { if (err) throw err }
+    );
   }
 
   function queryDB(stock) {
