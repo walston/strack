@@ -1,26 +1,4 @@
 var feed = document.getElementById('feed');
-var getData = new Promise(function(resolve, reject) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', '/fetch/all');
-  xhr.addEventListener('error', function(message) {
-    reject(message);
-  });
-  xhr.send();
-  xhr.addEventListener('load', function() {
-    if (xhr.status == 200) {
-      resolve(JSON.parse(xhr.responseText));
-    }
-    else {
-      reject(xhr.status);
-    }
-  });
-})
-
-getData.then(function(data) {
-  data.forEach(function(ticker) {
-    feed.appendChild(makeTicker(ticker));
-  });
-});
 
 function makeTicker(ticker) {
   var container = document.createElement('div');
@@ -53,33 +31,27 @@ function makeTicker(ticker) {
   return container;
 }
 
+function updateFeed(data) {
+  while(feed.firstChild) {
+    feed.removeChild(feed.firstChild);
+  };
+  data.forEach(function(ticker) {
+    feed.appendChild(makeTicker(ticker));
+  });
+}
+
 document.getElementById('search').addEventListener('submit', function(e) {
   e.preventDefault();
-  var sendSearch = new Promise(function(resolve, reject) {
-    var query = document.getElementById('searchInput').value;
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'search?s=' + query);
-    xhr.addEventListener('error', function(message) {
-      reject(message)
-    });
-    xhr.send();
-    xhr.addEventListener('load', function() {
-      if (xhr.status == 200) {
-        resolve(JSON.parse(xhr.responseText));
-      }
-      else {
-        reject(xhr.status);
-      }
-    });
-
+  var query = document.getElementById('searchInput').value;
+  $.get({
+    url: 'search?s=' + query,
+    success: updateFeed,
+    dataType: 'json'
   });
+});
 
-  sendSearch.then(function(data) {
-    while(feed.firstChild) {
-      feed.removeChild(feed.firstChild);
-    };
-    data.forEach(function(ticker) {
-      feed.appendChild(makeTicker(ticker));
-    });
-  });
+$.get({
+  url: 'fetch/all',
+  success: updateFeed,
+  dataType: 'json'
 });
