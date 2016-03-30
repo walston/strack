@@ -5,7 +5,6 @@ var getData = new Promise(function(resolve, reject) {
   xhr.addEventListener('error', function(message) {
     reject(message);
   });
-  // xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send();
   xhr.addEventListener('load', function() {
     if (xhr.status == 200) {
@@ -53,3 +52,34 @@ function makeTicker(ticker) {
 
   return container;
 }
+
+document.getElementById('search').addEventListener('submit', function(e) {
+  e.preventDefault();
+  var sendSearch = new Promise(function(resolve, reject) {
+    var query = document.getElementById('searchInput').value;
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'search?s=' + query);
+    xhr.addEventListener('error', function(message) {
+      reject(message)
+    });
+    xhr.send();
+    xhr.addEventListener('load', function() {
+      if (xhr.status == 200) {
+        resolve(JSON.parse(xhr.responseText));
+      }
+      else {
+        reject(xhr.status);
+      }
+    });
+
+  });
+
+  sendSearch.then(function(data) {
+    while(feed.firstChild) {
+      feed.removeChild(feed.firstChild);
+    };
+    data.forEach(function(ticker) {
+      feed.appendChild(makeTicker(ticker));
+    });
+  });
+});

@@ -29,12 +29,7 @@ process.on('exit', function() {
 gulp.task('lint', function() {
   return gulp
     .src(paths.devjs)
-    .pipe(eslint({
-      rules: {
-        'no-console': 'error',
-        'no-debugger': 'error'
-      }
-    }))
+    .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError())
     .pipe(gulp.dest('./public/js/'));
