@@ -42,7 +42,7 @@ function updateFeed(data) {
   });
 }
 
-function sortData(param, data) {
+function sortData(param, data, descending) {
   param = param.toLowerCase();
   data = _.sortBy(data, function(ticker) {
     if (!ticker[param]) return null;
@@ -52,7 +52,11 @@ function sortData(param, data) {
     else if (typeof ticker[param] == 'string') {
       return ticker[param].toLowerCase();
     }
+    else {
+      return null;
+    }
   });
+  if (descending === true) data.reverse();
   updateFeed(data)
 }
 
@@ -65,6 +69,28 @@ document.getElementById('search').addEventListener('submit', function(e) {
     dataType: 'json'
   });
 });
+
+document.addEventListener('click', function(event) {
+  function parentWith(attribute, clicked) {
+    for (looker = clicked;
+      looker != document.body;
+      looker = looker.parentNode) {
+        if (looker.hasAttribute(attribute)) {
+          return looker
+        }
+    }
+    return clicked;
+  }
+
+  var target = parentWith('data-method', event.target);
+  var method = target.getAttribute('data-method');
+
+  if (method == 'sort') {
+    var att = 'data-sort';
+    var sortSystem = parentWith(att, event.target).getAttribute(att);
+    sortData(sortSystem, lastData);
+  }
+})
 
 $.get({
   url: 'fetch/all',
