@@ -3,6 +3,7 @@ var fs = require('fs');
 var fileExists = require('file-exists');
 var csv = require('csv');
 csv.parse = require('csv-parse/lib/sync');
+var und = require('underscore');
 
 const DB_PATH = './db';
 const YAHOO_FINANCE_URL = 'http://download.finance.yahoo.com/d/quotes.csv'; // s=:stocks & f=:DATAPOINTS
@@ -67,8 +68,19 @@ function Portfolio () {
     })
   }
 
+  function search(query) {
+    var db = JSON.parse(fs.readFileSync(DB_PATH).toString('utf8'))
+    return und.filter(db, function(stock) {
+      return und.find(query, function(symbol) {
+        console.log(symbol + ' == ' + stock.symbol);
+        return (new RegExp(symbol, 'gi')).test(stock.symbol);
+      })
+    });
+  }
+
   this.build = build;
   this.current = current;
+  this.search = search;
 }
 var yahoo = new Portfolio();
 module.exports = yahoo;

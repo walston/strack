@@ -4,8 +4,7 @@ var yahoo = require('../modules/yahoo-financial');
 
 router.get('/', function(req, res) {
   var query = req.query.s.split(',');
-  console.log(query);
-  res.json(yahoo.current(query));
+  res.json(yahoo.search(query));
 });
 
 module.exports = router;
