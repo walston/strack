@@ -3,7 +3,7 @@ var spawn = require('child_process').spawn;
 var node;
 
 gulp.task('default', ['server'], function() {
-  gulp.watch(['./*.js','./public/**/*.js'], ['server']);
+  gulp.watch(['./*.js','./**/*.js'], ['server']);
 });
 
 gulp.task('debug', ['debugServer'], function() {
