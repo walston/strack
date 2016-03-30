@@ -70,6 +70,28 @@ document.getElementById('search').addEventListener('submit', function(e) {
   });
 });
 
+document.addEventListener('click', function(event) {
+  function parentWith(attribute, clicked) {
+    for (looker = clicked;
+      looker != document.body;
+      looker = looker.parentNode) {
+        if (looker.hasAttribute(attribute)) {
+          return looker
+        }
+    }
+    return clicked;
+  }
+
+  var target = parentWith('data-method', event.target);
+  var method = target.getAttribute('data-method');
+
+  if (method == 'sort') {
+    var att = 'data-sort';
+    var sortSystem = parentWith(att, event.target).getAttribute(att);
+    sortData(sortSystem, lastData);
+  }
+})
+
 $.get({
   url: 'fetch/all',
   success: updateFeed,
