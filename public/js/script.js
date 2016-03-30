@@ -1,4 +1,5 @@
 var feed = document.getElementById('feed');
+var lastData;
 
 function makeTicker(ticker) {
   var container = document.createElement('div');
@@ -32,12 +33,27 @@ function makeTicker(ticker) {
 }
 
 function updateFeed(data) {
+  lastData = data;
   while(feed.firstChild) {
     feed.removeChild(feed.firstChild);
   };
   data.forEach(function(ticker) {
     feed.appendChild(makeTicker(ticker));
   });
+}
+
+function sortData(param, data) {
+  param = param.toLowerCase();
+  data = _.sortBy(data, function(ticker) {
+    if (!ticker[param]) return null;
+    if (!isNaN(ticker[param])) {
+      return Number.parseInt(ticker[param]);
+    }
+    else if (typeof ticker[param] == 'string') {
+      return ticker[param].toLowerCase();
+    }
+  });
+  updateFeed(data)
 }
 
 document.getElementById('search').addEventListener('submit', function(e) {

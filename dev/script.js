@@ -42,9 +42,18 @@ function updateFeed(data) {
   });
 }
 
-function sortData(parameter, data) {
+function sortData(param, data) {
+  param = param.toLowerCase();
   data = _.sortBy(data, function(ticker) {
-    return Number.parseInt(ticker.ask);
+    if (!ticker[param]) return null;
+    if (!isNaN(ticker[param])) {
+      return Number.parseInt(ticker[param]);
+    }
+    else if (typeof ticker[param] == 'string') {
+      return ticker[param].toLowerCase();
+    } else {
+      return null;
+    }
   });
   updateFeed(data)
 }
