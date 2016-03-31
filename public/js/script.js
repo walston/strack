@@ -6,23 +6,30 @@ function makeTicker(ticker) {
   var panel = document.createElement('div');
   var panelHead = document.createElement('div');
   var panelBody = document.createElement('div');
+  var addButton = document.createElement('button')
   var sym = document.createElement('span');
   var name = document.createElement('p');
   var ask = document.createElement('span');
+
+  addButton.setAttribute('data-method', 'watchlistAdd');
+  addButton.setAttribute('data-symbol', ticker.symbol);
 
   container.classList.add('col-sm-3', 'col-xs-4', 'ticker');
   panel.classList.add('panel', 'panel-default');
   panelHead.classList.add('panel-heading');
   panelBody.classList.add('panel-body');
+  addButton.classList.add('btn-xs', 'btn-success', 'pull-right')
   sym.classList.add('h3');
   name.classList.add('h5');
   ask.classList.add('h6');
 
+  addButton.textContent = '+';
   sym.textContent = ticker.symbol;
   name.textContent = ticker.name;
   ask.textContent = 'ask: ' + ticker.ask;
 
   panelHead.appendChild(sym);
+  panelHead.appendChild(addButton);
   panelBody.appendChild(name);
   panelBody.appendChild(ask);
   panel.appendChild(panelHead);
@@ -67,11 +74,11 @@ function watchlistAdd(symbol, watchlist) {
     type: 'POST',
     contentType: 'application/json',
     data: JSON.stringify({ stock: symbol }),
-    success: function() {
+    success: function(payload) {
       var list = _.find(userData.watchlists, function(i) {
         return watchlist == i.name;
       });
-      list.stocks.push(symbol);
+      list.stocks = payload;
     }
   })
 }
@@ -107,7 +114,8 @@ document.addEventListener('click', function(event) {
     sortData(sortSystem, lastData);
   }
   if (method == 'watchlistAdd') {
-    watchlistAdd('STFU', 'test', 'treezrppl2')
+    var symbol = target.getAttribute('data-symbol');
+    watchlistAdd(symbol, 'test');
   }
 });
 
