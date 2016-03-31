@@ -6,24 +6,19 @@ function makeTicker(ticker) {
   var panel = document.createElement('div');
   var panelHead = document.createElement('div');
   var panelBody = document.createElement('div');
-  var addButton = document.createElement('button')
+  var addButton = contextualDropdown();
   var sym = document.createElement('span');
   var name = document.createElement('p');
   var ask = document.createElement('span');
-
-  addButton.setAttribute('data-method', 'watchlistAdd');
-  addButton.setAttribute('data-symbol', ticker.symbol);
 
   container.classList.add('col-sm-3', 'col-xs-4', 'ticker');
   panel.classList.add('panel', 'panel-default');
   panelHead.classList.add('panel-heading');
   panelBody.classList.add('panel-body');
-  addButton.classList.add('btn-xs', 'btn-success', 'pull-right')
   sym.classList.add('h3');
   name.classList.add('h5');
   ask.classList.add('h6');
 
-  addButton.textContent = '+';
   sym.textContent = ticker.symbol;
   name.textContent = ticker.name;
   ask.textContent = 'ask: ' + ticker.ask;
@@ -35,6 +30,37 @@ function makeTicker(ticker) {
   panel.appendChild(panelHead);
   panel.appendChild(panelBody);
   container.appendChild(panel);
+
+  return container;
+}
+
+function contextualDropdown() {
+  function dropdownList(watchlists) {
+    var menu = document.createElement('ul');
+    menu.classList.add('dropdown-menu');
+    _.each(watchlists, function(watchlist) {
+      var listItem = document.createElement('li');
+      var text = document.createElement('span');
+      listItem.setAttribute('data-method', 'watchlistAdd');
+      text.textContent = watchlist.name;
+      listItem.appendChild(text);
+      menu.appendChild(listItem);
+    });
+    return menu;
+  }
+
+  var container = document.createElement('span');
+  var trigger = document.createElement('button');
+  var dropdown = dropdownList(userData.watchlists);
+
+  container.classList.add('dropdown', 'pull-right');
+  trigger.classList.add('btn-sm', 'btn-default');
+  trigger.setAttribute('type', 'button');
+  trigger.setAttribute('data-toggle', 'dropdown');
+  trigger.textContent = '+';
+
+  container.appendChild(trigger);
+  container.appendChild(dropdown);
 
   return container;
 }

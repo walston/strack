@@ -1,2 +1,6 @@
 .navbar { border-radius: 0;}
 .panel { height: 170px !important; }
+/*.panel button { display: none; }
+.panel:hover button {
+  display: default;
+}*/
