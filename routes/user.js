@@ -8,9 +8,11 @@ router.get('/:user', function(req, res) {
   var user = und.find(userDB, function(i) {
     return i.username.toLowerCase() == req.params.user.toLowerCase();
   });
+  res.json(user);
 });
 
 router.post('/:user/:watchlist', jsonParser, function(req, res) {
+  console.log(req.body);
   var additive = req.body.stock.toUpperCase();
   var user = und.find(userDB, function(i) {
     return i.username.toLowerCase() == req.params.user.toLowerCase();

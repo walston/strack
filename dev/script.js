@@ -60,6 +60,22 @@ function sortData(param, data, descending) {
   updateFeed(data);
 }
 
+function watchlistAdd(symbol, watchlist) {
+  symbol = symbol.toUpperCase();
+  $.ajax({
+    url: 'user/' + userData.username + '/' + watchlist,
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify({ stock: symbol }),
+    success: function() {
+      var list = _.find(userData.watchlists, function(i) {
+        return watchlist == i.name;
+      });
+      list.stocks.push(symbol);
+    }
+  })
+}
+
 document.getElementById('search').addEventListener('submit', function(e) {
   e.preventDefault();
   var query = document.getElementById('searchInput').value;
@@ -90,7 +106,19 @@ document.addEventListener('click', function(event) {
     var sortSystem = parentWith(att, event.target).getAttribute(att);
     sortData(sortSystem, lastData);
   }
-})
+  if (method == 'watchlistAdd') {
+    watchlistAdd('STFU', 'test', 'treezrppl2')
+  }
+});
+
+var userData;
+$.get({
+  url: 'user/treezrppl2',
+  dataType: 'json',
+  success: function(payload) {
+    userData = payload;
+  }
+});
 
 $.get({
   url: 'fetch/all',
