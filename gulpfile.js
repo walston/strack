@@ -3,7 +3,7 @@ var spawn = require('child_process').spawn; var node;
 var eslint = require('gulp-eslint');
 paths = {
   npm: '!./node_modules/*.*',
-  servejs: ['./routes/*.js', './app.js'],
+  servejs: ['./routes/*.js', './app.js', './modules/*.js'],
   publicjs: './public/*.js',
   devjs: './dev/*.js'
 }
@@ -48,7 +48,11 @@ gulp.task('client-js-lint', function() {
 gulp.task('server-js-lint', function() {
   return gulp
     .src(paths.servejs)
-    .pipe(eslint())
+    .pipe(eslint({
+      'parserOptions': {
+        'ecmaVersion': 6
+      }
+    }))
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
 })
