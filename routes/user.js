@@ -1,13 +1,17 @@
 var express = require('express');
 var router = express.Router();
+var jsonParser = require('body-parser').json();
 var userDB = require('../modules/userdb');
 var und = require('underscore');
 
 router.get('/:user', function(req, res) {
-  res.send('user logged in as ' + req.params.user);
+  var user = und.find(userDB, function(i) {
+    return i.username.toLowerCase() == req.params.user.toLowerCase();
+  });
 });
 
-router.get('/:user/:watchlist', function(req, res) {
+router.post('/:user/:watchlist', jsonParser, function(req, res) {
+  var additive = req.body.stock.toUpperCase();
   var user = und.find(userDB, function(i) {
     return i.username.toLowerCase() == req.params.user.toLowerCase();
   });
@@ -17,6 +21,15 @@ router.get('/:user/:watchlist', function(req, res) {
     return i.name.toLowerCase() == req.params.watchlist.toLowerCase();
   });
   if (!list) res.status(404).send('No watchlist ' + req.params.watchlist)
+
+  if (!und.contains(list.stocks, function(i) {
+    return i == additive;
+  })) {
+    list.stocks.push(additive);
+  }
+  else {
+    res.status(409).json(list.stocks);
+  }
   res.json(list.stocks);
 });
 
