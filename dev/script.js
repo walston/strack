@@ -36,7 +36,7 @@ function updateFeed(data) {
   lastData = data;
   while(feed.firstChild) {
     feed.removeChild(feed.firstChild);
-  };
+  }
   data.forEach(function(ticker) {
     feed.appendChild(makeTicker(ticker));
   });
@@ -57,7 +57,7 @@ function sortData(param, data, descending) {
     }
   });
   if (descending === true) data.reverse();
-  updateFeed(data)
+  updateFeed(data);
 }
 
 document.getElementById('search').addEventListener('submit', function(e) {
@@ -72,7 +72,7 @@ document.getElementById('search').addEventListener('submit', function(e) {
 
 document.addEventListener('click', function(event) {
   function parentWith(attribute, clicked) {
-    for (looker = clicked;
+    for (var looker = clicked;
       looker != document.body;
       looker = looker.parentNode) {
         if (looker.hasAttribute(attribute)) {
