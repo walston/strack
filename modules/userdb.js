@@ -16,6 +16,15 @@ module.exports = [
           'ZION',
           'AAPL'
         ]
+      },
+      {
+        'name': 'stuff',
+        'stocks': [
+          'A',
+          'AA',
+          'AAA',
+          'AAPL'
+        ]
       }
     ]
   }

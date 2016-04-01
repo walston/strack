@@ -144,7 +144,7 @@ document.addEventListener('click', function(event) {
   if (method == 'watchlistAdd') {
     var ticker = parentWith('data-symbol', event.target);
     var symbol = ticker.getAttribute('data-symbol');
-    watchlistAdd(symbol, 'test');
+    watchlistAdd(symbol, target.getAttribute('data-list'));
   }
 });
 
