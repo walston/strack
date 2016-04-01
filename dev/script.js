@@ -11,6 +11,7 @@ function makeTicker(ticker) {
   var name = document.createElement('p');
   var ask = document.createElement('span');
 
+  container.setAttribute('data-symbol', ticker.symbol);
   container.classList.add('col-sm-3', 'col-xs-4', 'ticker');
   panel.classList.add('panel', 'panel-default');
   panelHead.classList.add('panel-heading');
@@ -40,8 +41,9 @@ function contextualDropdown() {
     menu.classList.add('dropdown-menu');
     _.each(watchlists, function(watchlist) {
       var listItem = document.createElement('li');
-      var text = document.createElement('span');
+      var text = document.createElement('a');
       listItem.setAttribute('data-method', 'watchlistAdd');
+      listItem.setAttribute('data-list', watchlist.name);
       text.textContent = watchlist.name;
       listItem.appendChild(text);
       menu.appendChild(listItem);
@@ -140,7 +142,8 @@ document.addEventListener('click', function(event) {
     sortData(sortSystem, lastData);
   }
   if (method == 'watchlistAdd') {
-    var symbol = target.getAttribute('data-symbol');
+    var ticker = parentWith('data-symbol', event.target);
+    var symbol = ticker.getAttribute('data-symbol');
     watchlistAdd(symbol, 'test');
   }
 });
