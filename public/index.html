@@ -6,6 +6,7 @@
     <script src="http://underscorejs.org/underscore-min.js" charset="utf-8"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" media="screen" href="css/style.css">
   </head>
   <body>
@@ -18,13 +19,19 @@
             <button class="btn btn-default" data-method="sort" data-sort="name" type="button">Name</button>
           </div><!-- /.btn-group -->
         </div>
-        <form class="navbar-form navbar-right" id="search">
-          <div class="form-group">
-            <label class="sr-only" for="searchInput">Search:</label>
-            <input class="form-control" id="searchInput" name="searchInput" type="search" placeholder="Search...">
-            <input class="btn btn-success" type="submit" name="submit" value="🔎">
-          </div><!-- /.form-group -->
-        </form>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <form class="navbar-form" id="search">
+              <div class="form-group">
+                <label class="sr-only" for="searchInput">Search:</label>
+                <input class="form-control" id="searchInput" name="searchInput" type="search" placeholder="Search...">
+                <input class="btn btn-success" type="submit" name="submit" value="🔎">
+              </div><!-- /.form-group -->
+            </form>
+          </li>
+          <li id="userControls">
+          </li>
+        </ul><!-- /.navbar-right -->
       </div><!-- /.container -->
     </nav>
     <div class="container">

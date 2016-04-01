@@ -1,6 +1,28 @@
 var feed = document.getElementById('feed');
 var lastData;
 
+function makeUserControls(container) {
+  var controller = document.createElement('a');
+  var username = document.createTextNode(userData.username + ' ');
+  var carat = document.createElement('i');
+  var dropdownMenu = document.createElement('ul');
+  var menuItem1 = document.createElement('li');
+
+  container.classList.add('dropdown');
+  controller.classList.add('dropdown-toggle');
+  carat.classList.add('fa', 'fa-caret-down');
+  dropdownMenu.classList.add('dropdown-menu');
+  controller.setAttribute('data-toggle', 'dropdown');
+
+  menuItem1.textContent = 'rabble';
+
+  container.appendChild(controller);
+  controller.appendChild(username);
+  controller.appendChild(carat);
+  container.appendChild(dropdownMenu);
+  dropdownMenu.appendChild(menuItem1);
+}
+
 function makeTicker(ticker) {
   var container = document.createElement('div');
   var panel = document.createElement('div');
@@ -154,6 +176,7 @@ $.get({
   dataType: 'json',
   success: function(payload) {
     userData = payload;
+    makeUserControls(document.getElementById('userControls'));
   }
 });
 
