@@ -22,7 +22,6 @@ module.exports = [
         'stocks': [
           'A',
           'AA',
-          'AAA',
           'AAPL'
         ]
       }
