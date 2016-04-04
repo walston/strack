@@ -8,15 +8,20 @@ var und = require('underscore');
 const DB_PATH = './db';
 const YAHOO_FINANCE_URL = 'http://download.finance.yahoo.com/d/quotes.csv'; // s=:stocks & f=:DATAPOINTS
 const YAHOO_HISTORICAL_URL = 'http://ichart.finance.yahoo.com/table.csv?s=AAPL&c=1962'; // s=:stock & c=:time
-const DATAPOINTS = 'snabo';
+const DATAPOINTS = 'snabot7erm3m4';
 
-function makeTicker(symbol, name, ask, bid, open) {
+function makeTicker(symbol, name, ask, bid, open, ticker_trend, eps, pe, m3, m4) {
   return {
     symbol: symbol,
     name: name,
     ask: ask,
     bid: bid,
-    open: open
+    open: open,
+    "ticker-trend": ticker_trend,
+    "earnings-per-share": eps,
+    "pe-ratio": pe,
+    "50-day-MA": m3,
+    "200-day-MA": m4
   }
 }
 
