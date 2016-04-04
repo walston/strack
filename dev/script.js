@@ -1,4 +1,5 @@
 var feed = document.getElementById('feed');
+var sourceData;
 var lastData;
 
 function makeUserControls(container) {
@@ -154,11 +155,16 @@ function watchlistAdd(symbol, watchlist) {
 document.getElementById('search').addEventListener('submit', function(e) {
   e.preventDefault();
   var query = document.getElementById('searchInput').value;
-  $.get({
-    url: 'search?s=' + query,
-    success: updateFeed,
-    dataType: 'json'
-  });
+  if (!query.length) {
+    updateFeed(sourceData);
+  }
+  else {
+    $.get({
+      url: 'search?s=' + query,
+      success: updateFeed,
+      dataType: 'json'
+    });
+}
 });
 
 document.addEventListener('click', function(event) {
@@ -213,6 +219,9 @@ $.get({
 
 $.get({
   url: 'fetch/all',
-  success: updateFeed,
+  success: function(payload) {
+    sourceData = payload;
+    updateFeed(payload);
+  },
   dataType: 'json'
 });
