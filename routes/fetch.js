@@ -10,11 +10,6 @@ router.post('/', jsonParser, function(req, res) {
   res.json(array);
 });
 
-router.get('/', jsonParser, function(req, res) {
-  var array = yahoo.current(req.body.symbols);
-  res.json(yahoo.current(array));
-})
-
 router.get('/all', function(req, res) {
   res.json(yahoo.current('all'))
 })
