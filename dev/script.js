@@ -54,8 +54,8 @@ function makeTicker(ticker) {
   panel.classList.add('panel', 'panel-default');
   panelHead.classList.add('panel-heading');
   panelBody.classList.add('panel-body');
-  sym.classList.add('h3');
-  name.classList.add('h5');
+  sym.classList.add('h4');
+  name.classList.add();
   ask.classList.add('h6');
 
   sym.textContent = ticker.symbol;
@@ -90,15 +90,17 @@ function contextualDropdown() {
   }
 
   var container = document.createElement('span');
-  var trigger = document.createElement('button');
+  var trigger = document.createElement('a');
+  var icon = document.createElement('i');
   var dropdown = dropdownList(userData.watchlists);
 
   container.classList.add('dropdown', 'pull-right');
   trigger.classList.add('btn-sm', 'btn-default');
+  icon.classList.add('fa', 'fa-caret-down')
   trigger.setAttribute('type', 'button');
   trigger.setAttribute('data-toggle', 'dropdown');
-  trigger.textContent = '+';
 
+  trigger.appendChild(icon);
   container.appendChild(trigger);
   container.appendChild(dropdown);
 
