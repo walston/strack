@@ -11,11 +11,11 @@ function makeUserControls(container) {
   }
 
   function watchlists (container) {
-    _.each(userData.watchlists, function(list) {
+    _.each(userData.watchlists, function(list, i) {
       var wrap = document.createElement('li');
       var link = document.createElement('a');
       link.setAttribute('data-method', 'watchlist');
-      link.setAttribute('data-list', list.name);
+      link.setAttribute('data-list', i);
       link.textContent = list.name;
       wrap.appendChild(link);
       container.appendChild(wrap);
@@ -110,7 +110,7 @@ function updateFeed(data) {
   while(feed.firstChild) {
     feed.removeChild(feed.firstChild);
   }
-  data.forEach(function(ticker) {
+  _.each(data, function(ticker) {
     feed.appendChild(makeTicker(ticker));
   });
 }
@@ -185,7 +185,16 @@ document.addEventListener('click', function(event) {
     watchlistAdd(symbol, target.getAttribute('data-list'));
   }
   else if (method == 'watchlist') {
-    null
+    var stocks = {
+      symbols: userData.watchlists[target.getAttribute('data-list')].stocks
+    }
+    $.ajax({
+      url: 'fetch',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(stocks),
+      success: updateFeed
+    });
   }
 
 });
