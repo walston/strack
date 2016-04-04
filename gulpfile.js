@@ -34,10 +34,14 @@ gulp.task('client-js-lint', function() {
     .src(paths.devjs)
     .pipe(eslint({
       extends: 'eslint:recommended',
+      env: {
+        'browser': true
+      },
       globals: {
         '$': true,
         '_': true,
-        'document': true
+        'document': true,
+        'Promise': true
       },
       rules: {
         'no-unused-vars': 1
