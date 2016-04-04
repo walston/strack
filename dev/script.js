@@ -2,11 +2,30 @@ var feed = document.getElementById('feed');
 var lastData;
 
 function makeUserControls(container) {
+  function dropdown () {
+    var container = document.createElement('ul');
+    if (userData.watchlists.length > 0) {
+      watchlists(container);
+    }
+    return container;
+  }
+
+  function watchlists (container) {
+    _.each(userData.watchlists, function(list) {
+      var wrap = document.createElement('li');
+      var link = document.createElement('a');
+      link.setAttribute('data-method', 'watchlist');
+      link.setAttribute('data-list', list.name);
+      link.textContent = list.name;
+      wrap.appendChild(link);
+      container.appendChild(wrap);
+    });
+  }
+
   var controller = document.createElement('a');
   var username = document.createTextNode(userData.username + ' ');
   var carat = document.createElement('i');
-  var dropdownMenu = document.createElement('ul');
-  var menuItem1 = document.createElement('li');
+  var dropdownMenu = dropdown();
 
   container.classList.add('dropdown');
   controller.classList.add('dropdown-toggle');
@@ -14,13 +33,10 @@ function makeUserControls(container) {
   dropdownMenu.classList.add('dropdown-menu');
   controller.setAttribute('data-toggle', 'dropdown');
 
-  menuItem1.textContent = 'rabble';
-
   container.appendChild(controller);
   controller.appendChild(username);
   controller.appendChild(carat);
   container.appendChild(dropdownMenu);
-  dropdownMenu.appendChild(menuItem1);
 }
 
 function makeTicker(ticker) {
@@ -163,11 +179,15 @@ document.addEventListener('click', function(event) {
     var sortSystem = parentWith(att, event.target).getAttribute(att);
     sortData(sortSystem, lastData);
   }
-  if (method == 'watchlistAdd') {
+  else if (method == 'watchlistAdd') {
     var ticker = parentWith('data-symbol', event.target);
     var symbol = ticker.getAttribute('data-symbol');
     watchlistAdd(symbol, target.getAttribute('data-list'));
   }
+  else if (method == 'watchlist') {
+    null
+  }
+
 });
 
 var userData;
