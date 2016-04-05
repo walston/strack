@@ -34,12 +34,12 @@ function makeTicker(symbol, name, ask, bid, open, ticker_trend, eps, pe, m3, m4)
     ask: ask,
     bid: bid,
     open: open,
-    "ticker-trend": ticker_trend,
-    "earnings-per-share": eps,
-    "pe-ratio": pe,
-    "50-day-MA": m3,
-    "200-day-MA": m4,
-    "ma-quality": maCalculator(open, m3, m4)
+    trend: ticker_trend,
+    eps: eps,
+    pe: pe,
+    ma50: m3,
+    ma200: m4,
+    maCalculation: maCalculator(open, m3, m4)
   }
 }
 

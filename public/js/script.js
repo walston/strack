@@ -48,7 +48,7 @@ function makeTicker(ticker) {
   var addButton = contextualDropdown();
   var sym = document.createElement('span');
   var name = document.createElement('p');
-  var ask = document.createElement('span');
+  var open = document.createElement('span');
 
   container.setAttribute('data-symbol', ticker.symbol);
   container.classList.add('col-sm-3', 'col-xs-4', 'ticker');
@@ -56,17 +56,16 @@ function makeTicker(ticker) {
   panelHead.classList.add('panel-heading');
   panelBody.classList.add('panel-body');
   sym.classList.add('h4');
-  name.classList.add();
-  ask.classList.add('h6');
+  open.classList.add('h6');
 
   sym.textContent = ticker.symbol;
   name.textContent = ticker.name;
-  ask.textContent = 'ask: ' + ticker.ask;
+  open.textContent = 'open: $' + Number(ticker.open).toFixed(2);
 
   panelHead.appendChild(sym);
   panelHead.appendChild(addButton);
   panelBody.appendChild(name);
-  panelBody.appendChild(ask);
+  panelBody.appendChild(open);
   panel.appendChild(panelHead);
   panel.appendChild(panelBody);
   container.appendChild(panel);
