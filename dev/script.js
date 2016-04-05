@@ -14,7 +14,7 @@ function makeUserControls(container) {
     }
     if (hasPurchaselists) {
       header(container, 'Purchase Lists');
-      lists(container, userData.purchaselists, 'purchaselists');
+      lists(container, userData.purchaselists, 'purchaselist');
     }
     return container;
   }
@@ -207,14 +207,31 @@ document.addEventListener('click', function(event) {
     watchlistAdd(symbol, target.getAttribute('data-list'));
   }
   else if (method == 'watchlist') {
-    var stocks = {
+    var watched = {
       symbols: userData.watchlists[target.getAttribute('data-list')].stocks
     }
     $.ajax({
       url: 'fetch',
       type: 'POST',
       contentType: 'application/json',
-      data: JSON.stringify(stocks),
+      data: JSON.stringify(watched),
+      success: updateFeed
+    });
+  }
+  else if (method == 'purchaselist') {
+    var purchased = {
+      symbols: []
+    }
+    _.each(userData.purchaselists[target.getAttribute('data-list')].stocks,
+      function(stock) {
+        purchased.symbols.push(stock.symbol);
+      }
+    );
+    $.ajax({
+      url: 'fetch',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(purchased),
       success: updateFeed
     });
   }
