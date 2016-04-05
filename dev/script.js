@@ -5,22 +5,37 @@ var lastData;
 function makeUserControls(container) {
   function dropdown () {
     var container = document.createElement('ul');
-    if (userData.watchlists.length > 0) {
-      watchlists(container);
+    var hasWatchlists = userData.watchlists.length > 0;
+    var hasPurchaselists = userData.purchaselists.length > 0;
+
+    if (hasWatchlists) {
+      header(container, 'Watchlists');
+      lists(container, userData.watchlists, 'watchlist');
+    }
+    if (hasPurchaselists) {
+      header(container, 'Purchase Lists');
+      lists(container, userData.purchaselists, 'purchaselists');
     }
     return container;
   }
 
-  function watchlists (container) {
-    _.each(userData.watchlists, function(list, i) {
+  function lists (menu, list, method) {
+    _.each(list, function(list, i) {
       var wrap = document.createElement('li');
       var link = document.createElement('a');
-      link.setAttribute('data-method', 'watchlist');
+      link.setAttribute('data-method', method);
       link.setAttribute('data-list', i);
       link.textContent = list.name;
       wrap.appendChild(link);
-      container.appendChild(wrap);
+      menu.appendChild(wrap);
     });
+  }
+
+  function header(menu, string) {
+    var sep = document.createElement('li');
+    sep.classList.add('dropdown-header');
+    sep.textContent = string;
+    menu.appendChild(sep);
   }
 
   var controller = document.createElement('a');
