@@ -15,16 +15,16 @@ function makeTicker(symbol, name, ask, bid, open, ticker_trend, eps, pe, m3, m4)
     var up200 = ma200 - current > 0;
     var up50 = ma50 - current > 0;
     if (up200 && up50) {
-      return 2;
+      return 'great';
     }
     else if (up200) {
-      return 1
+      return 'good'
     }
     else if (up50) {
-      return (-1);
+      return 'ok';
     }
     else {
-      return (-2);
+      return 'junk';
     }
   }
 

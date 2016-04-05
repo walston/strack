@@ -4,3 +4,7 @@
 .panel:hover .dropdown {
   display: block;
 }
+.ticker .great { background-color: hsl(90, 80%, 60%); }
+.ticker .good { background-color: hsl(60, 50%, 80%); }
+.ticker .ok { background-color: hsl(30, 25%, 80%); }
+.ticker .junk { background-color: hsl(0, 50%, 60%); }

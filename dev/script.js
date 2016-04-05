@@ -53,7 +53,7 @@ function makeTicker(ticker) {
   container.setAttribute('data-symbol', ticker.symbol);
   container.classList.add('col-sm-3', 'col-xs-4', 'ticker');
   panel.classList.add('panel', 'panel-default');
-  panelHead.classList.add('panel-heading');
+  panelHead.classList.add('panel-heading', ticker.maCalculation);
   panelBody.classList.add('panel-body');
   sym.classList.add('h4');
   open.classList.add('h6');
