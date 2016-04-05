@@ -8,7 +8,7 @@ paths = {
   devjs: './dev/*.js'
 }
 
-gulp.task('wip', ['serve'], function() {
+gulp.task('default', ['serve'], function() {
   gulp.watch(paths.servejs, {interval: 1000}, ['serve']);
   gulp.watch(paths.devjs, { interval: 1000 }, ['serve']);
 });
