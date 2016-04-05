@@ -153,13 +153,34 @@ function sortData(param, data, descending) {
 function watchlistAdd(symbol, watchlist) {
   symbol = symbol.toUpperCase();
   $.ajax({
-    url: 'user/' + userData.username + '/' + watchlist,
+    url: 'user/' + userData.username + '/watchlist/' + watchlist,
     type: 'POST',
     contentType: 'application/json',
     data: JSON.stringify({ stock: symbol }),
     success: function(payload) {
       var list = _.find(userData.watchlists, function(i) {
         return watchlist == i.name;
+      });
+      list.stocks = payload;
+    }
+  })
+}
+
+function purchaselistAdd(symbol, purchaselist) {
+  var stock = {
+    'symbol': symbol.toUpperCase(),
+    'cost': 20.25,
+    'shares': 5,
+    'fee': 7.95
+  };
+  $.ajax({
+    url: 'user/' + userData.username + '/purchaselist/' + purchaselist,
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(stock),
+    success: function(payload) {
+      var list = _.find(userData.purchaselists, function(i) {
+        return purchaselist == i.name;
       });
       list.stocks = payload;
     }
@@ -205,6 +226,11 @@ document.addEventListener('click', function(event) {
     var ticker = parentWith('data-symbol', event.target);
     var symbol = ticker.getAttribute('data-symbol');
     watchlistAdd(symbol, target.getAttribute('data-list'));
+  }
+  else if (method == 'purchaselistAdd') {
+    var purchase = parentWith('data-symbol', event.target);
+    var bought = purchase.getAttribute('data-symbol');
+    purchaselistAdd(bought, target.getAttribute('data-list'));
   }
   else if (method == 'watchlist') {
     var watched = {
