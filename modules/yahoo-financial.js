@@ -11,6 +11,23 @@ const YAHOO_HISTORICAL_URL = 'http://ichart.finance.yahoo.com/table.csv?s=AAPL&c
 const DATAPOINTS = 'snabot7erm3m4';
 
 function makeTicker(symbol, name, ask, bid, open, ticker_trend, eps, pe, m3, m4) {
+  function maCalculator (current, ma50, ma200) {
+    var up200 = ma200 - current > 0;
+    var up50 = ma50 - current > 0;
+    if (up200 && up50) {
+      return 2;
+    }
+    else if (up200) {
+      return 1
+    }
+    else if (up50) {
+      return (-1);
+    }
+    else {
+      return (-2);
+    }
+  }
+
   return {
     symbol: symbol,
     name: name,
@@ -21,7 +38,8 @@ function makeTicker(symbol, name, ask, bid, open, ticker_trend, eps, pe, m3, m4)
     "earnings-per-share": eps,
     "pe-ratio": pe,
     "50-day-MA": m3,
-    "200-day-MA": m4
+    "200-day-MA": m4,
+    "ma-quality": maCalculator(open, m3, m4)
   }
 }
 
