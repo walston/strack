@@ -89,31 +89,41 @@ function makeTicker(ticker) {
 }
 
 function contextualDropdown() {
-  function dropdownList(watchlists) {
-    var menu = document.createElement('ul');
-    menu.classList.add('dropdown-menu');
-    _.each(watchlists, function(watchlist) {
+  function dropdownList(parent, lists, dataMethod) {
+    _.each(lists, function(watchlist) {
       var listItem = document.createElement('li');
       var text = document.createElement('a');
-      listItem.setAttribute('data-method', 'watchlistAdd');
+      listItem.setAttribute('data-method', dataMethod);
       listItem.setAttribute('data-list', watchlist.name);
       text.textContent = watchlist.name;
       listItem.appendChild(text);
-      menu.appendChild(listItem);
+      parent.appendChild(listItem);
     });
-    return menu;
+  }
+
+  function dropdownHeader(parent, string) {
+    var sep = document.createElement('li');
+    sep.classList.add('dropdown-header');
+    sep.textContent = string;
+    parent.appendChild(sep);
   }
 
   var container = document.createElement('span');
   var trigger = document.createElement('a');
   var icon = document.createElement('i');
-  var dropdown = dropdownList(userData.watchlists);
+  var dropdown = document.createElement('ul');
+
+  dropdownHeader(dropdown, 'Watchlists');
+  dropdownList(dropdown, userData.watchlists, 'watchlistAdd');
+  dropdownHeader(dropdown, 'Purchase Lists');
+  dropdownList(dropdown, userData.purchaselists, 'purchaselistAdd');
 
   container.classList.add('dropdown', 'pull-right');
   trigger.classList.add('btn-sm', 'btn-default');
   icon.classList.add('fa', 'fa-caret-down')
   trigger.setAttribute('type', 'button');
   trigger.setAttribute('data-toggle', 'dropdown');
+  dropdown.classList.add('dropdown-menu');
 
   trigger.appendChild(icon);
   container.appendChild(trigger);
@@ -179,12 +189,12 @@ function purchaselistPrompt(symbol, purchaselist) {
   purchaselistAdd(additive, purchaselist);
 }
 
-function purchaselistAdd(stock, purchaselist) {
+function purchaselistAdd(purchase, purchaselist) {
   $.ajax({
     url: 'user/' + userData.username + '/purchaselist/' + purchaselist,
     type: 'POST',
     contentType: 'application/json',
-    data: JSON.stringify(stock),
+    data: JSON.stringify(purchase),
     success: function(payload) {
       var list = _.find(userData.purchaselists, function(i) {
         return purchaselist == i.name;
