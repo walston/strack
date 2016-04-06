@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 var und = require('underscore');
 var jsonParser = require('body-parser').json();
+var yahoo = require('../modules/yahoo-financial');
 
 function getList(user, name) {
   var list = und.find(user.lists, function(i) {
@@ -10,10 +11,26 @@ function getList(user, name) {
   return list;
 }
 
+function fulfill(list) {
+  var symbols = und.map(list.stocks, function(i) {
+    return i.symbol;
+  });
+  var stocks = yahoo.current(symbols);
+  list.stocks = und.map(list.stocks, function(listItem) {
+    var matching = und.find(stocks, function(ticker) {
+      return ticker.symbol == listItem.symbol;
+    });
+
+    return und.extend(matching, listItem);
+  });
+
+  return list;
+}
+
 router.get('/:id', function(req, res) {
   var list = getList(req.user, req.params.id)
   if (list) {
-    res.json(list);
+    res.json(fulfill(list));
   }
   else {
     res.status(404).send('No list by name: ' + req.params.id);
@@ -28,7 +45,7 @@ router.post('/:id', jsonParser, function(req, res) {
       stocks: req.body
     }
     req.user.lists.push(list);
-    res.json(list);
+    res.json(fulfill(list));
   }
   else {
     res.status(409).send('List "' + id + '" exists already');
@@ -39,7 +56,7 @@ router.put('/:id', jsonParser, function(req, res) {
   var list = getList(req.user, req.params.id);
   if (list) {
     list.stocks = und.union(list.stocks, req.body);
-    res.json(list)
+    res.json(fulfill(list));
   }
   else {
     res.status(404).send('No list by name: ' + req.params.id);
