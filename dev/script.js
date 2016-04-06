@@ -1,37 +1,37 @@
 var feed = document.getElementById('feed');
+var header = document.getElementById('header');
 var sourceData;
 var lastData;
 
-function makeUserControls(container) {
-  function dropdown () {
-    var container = document.createElement('ul');
-    if (userData.watchlists.length > 0) {
-      watchlists(container);
-    }
-    return container;
-  }
-
-  function watchlists (container) {
-    _.each(userData.watchlists, function(list, i) {
+function dropdown(dataMethod) {
+  function watchlists (parent) {
+    _.each(userData.lists, function(list) {
       var wrap = document.createElement('li');
       var link = document.createElement('a');
-      link.setAttribute('data-method', 'watchlist');
-      link.setAttribute('data-list', i);
+      link.setAttribute('data-method', dataMethod);
+      link.setAttribute('data-list', list.name);
       link.textContent = list.name;
       wrap.appendChild(link);
-      container.appendChild(wrap);
+      parent.appendChild(wrap);
     });
   }
+  var container = document.createElement('ul');
+  container.classList.add('dropdown-menu');
+  if (userData.lists.length > 0) {
+    watchlists(container);
+  }
+  return container;
+}
 
+function makeUserControls(container) {
   var controller = document.createElement('a');
   var username = document.createTextNode(userData.username + ' ');
   var carat = document.createElement('i');
-  var dropdownMenu = dropdown();
+  var dropdownMenu = dropdown('view');
 
   container.classList.add('dropdown');
   controller.classList.add('dropdown-toggle');
   carat.classList.add('fa', 'fa-caret-down');
-  dropdownMenu.classList.add('dropdown-menu');
   controller.setAttribute('data-toggle', 'dropdown');
 
   container.appendChild(controller);
@@ -45,7 +45,10 @@ function makeTicker(ticker) {
   var panel = document.createElement('div');
   var panelHead = document.createElement('div');
   var panelBody = document.createElement('div');
-  var addButton = contextualDropdown();
+  var dropdownContainer = document.createElement('span');
+  var trigger = document.createElement('a');
+  var icon = document.createElement('i');
+  var dropdownMenu = dropdown('add');
   var sym = document.createElement('span');
   var name = document.createElement('p');
   var open = document.createElement('span');
@@ -54,16 +57,23 @@ function makeTicker(ticker) {
   container.classList.add('col-sm-3', 'col-xs-4', 'ticker');
   panel.classList.add('panel', 'panel-default');
   panelHead.classList.add('panel-heading', ticker.maCalculation);
+  dropdownContainer.classList.add('dropdown', 'pull-right');
+  trigger.classList.add('dropdown-toggle', 'btn-sm', 'btn-default');
+  icon.classList.add('fa', 'fa-caret-down');
   panelBody.classList.add('panel-body');
   sym.classList.add('h4');
   open.classList.add('h6');
 
+  trigger.setAttribute('data-toggle', 'dropdown');
   sym.textContent = ticker.symbol;
   name.textContent = ticker.name;
   open.textContent = 'open: $' + Number(ticker.open).toFixed(2);
 
   panelHead.appendChild(sym);
-  panelHead.appendChild(addButton);
+  trigger.appendChild(icon);
+  dropdownContainer.appendChild(trigger);
+  dropdownContainer.appendChild(dropdownMenu);
+  panelHead.appendChild(dropdownContainer);
   panelBody.appendChild(name);
   panelBody.appendChild(open);
   panel.appendChild(panelHead);
@@ -73,48 +83,33 @@ function makeTicker(ticker) {
   return container;
 }
 
-function contextualDropdown() {
-  function dropdownList(watchlists) {
-    var menu = document.createElement('ul');
-    menu.classList.add('dropdown-menu');
-    _.each(watchlists, function(watchlist) {
-      var listItem = document.createElement('li');
-      var text = document.createElement('a');
-      listItem.setAttribute('data-method', 'watchlistAdd');
-      listItem.setAttribute('data-list', watchlist.name);
-      text.textContent = watchlist.name;
-      listItem.appendChild(text);
-      menu.appendChild(listItem);
-    });
-    return menu;
-  }
+function listState(data) {
+  var heading = data.name;
+  updateHeader(heading);
+  var stocks = data.stocks;
+  updateFeed(stocks);
+}
 
-  var container = document.createElement('span');
-  var trigger = document.createElement('a');
-  var icon = document.createElement('i');
-  var dropdown = dropdownList(userData.watchlists);
-
-  container.classList.add('dropdown', 'pull-right');
-  trigger.classList.add('btn-sm', 'btn-default');
-  icon.classList.add('fa', 'fa-caret-down')
-  trigger.setAttribute('type', 'button');
-  trigger.setAttribute('data-toggle', 'dropdown');
-
-  trigger.appendChild(icon);
-  container.appendChild(trigger);
-  container.appendChild(dropdown);
-
-  return container;
+function updateHeader(string) {
+  empty(header);
+  var head = document.createElement('span');
+  head.classList.add('col-xs-12', 'h3');
+  head.textContent = string;
+  header.appendChild(head);
 }
 
 function updateFeed(data) {
   lastData = data;
-  while(feed.firstChild) {
-    feed.removeChild(feed.firstChild);
-  }
+  empty(feed);
   _.each(data, function(ticker) {
     feed.appendChild(makeTicker(ticker));
   });
+}
+
+function empty(element) {
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  }
 }
 
 function sortData(param, data, descending) {
@@ -133,22 +128,6 @@ function sortData(param, data, descending) {
   });
   if (descending === true) data.reverse();
   updateFeed(data);
-}
-
-function watchlistAdd(symbol, watchlist) {
-  symbol = symbol.toUpperCase();
-  $.ajax({
-    url: 'user/' + userData.username + '/' + watchlist,
-    type: 'POST',
-    contentType: 'application/json',
-    data: JSON.stringify({ stock: symbol }),
-    success: function(payload) {
-      var list = _.find(userData.watchlists, function(i) {
-        return watchlist == i.name;
-      });
-      list.stocks = payload;
-    }
-  })
 }
 
 document.getElementById('search').addEventListener('submit', function(e) {
@@ -186,10 +165,15 @@ document.addEventListener('click', function(event) {
     var sortSystem = parentWith(att, event.target).getAttribute(att);
     sortData(sortSystem, lastData);
   }
-  else if (method == 'watchlistAdd') {
-    var ticker = parentWith('data-symbol', event.target);
-    var symbol = ticker.getAttribute('data-symbol');
-    watchlistAdd(symbol, target.getAttribute('data-list'));
+  else if (method == 'add') {
+    null
+    // var ticker = parentWith('data-symbol', event.target);
+    // var symbol = ticker.getAttribute('data-symbol');
+    // watchlistAdd(symbol, target.getAttribute('data-list'));
+  }
+  else if (method == 'view') {
+    var list = target.getAttribute('data-list');
+    $.get('list/' + list, listState);
   }
   else if (method == 'watchlist') {
     var stocks = {
@@ -200,7 +184,7 @@ document.addEventListener('click', function(event) {
       type: 'POST',
       contentType: 'application/json',
       data: JSON.stringify(stocks),
-      success: updateFeed
+      success: listState
     });
   }
 
