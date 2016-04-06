@@ -8,7 +8,7 @@ var port = process.env.PORT || 8080;
 
 app.use(findUser);
 app.use(function(req, res, next) {
-  console.log(req.method + ' : ' + req.user + ' : ' + req.url);
+  console.log(req.method + ' : @' + req.user.username + ' : ' + req.url);
   next();
 });
 
