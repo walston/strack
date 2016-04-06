@@ -20,10 +20,8 @@ function fulfill(list) {
     var matching = und.find(stocks, function(ticker) {
       return ticker.symbol == listItem.symbol;
     });
-
     return und.extend(matching, listItem);
   });
-
   return list;
 }
 
