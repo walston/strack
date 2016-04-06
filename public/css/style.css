@@ -4,6 +4,11 @@
 .panel:hover .dropdown {
   display: block;
 }
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .ticker .great { background-color: hsl(90, 80%, 60%); }
 .ticker .good { background-color: hsl(60, 50%, 80%); }
 .ticker .ok { background-color: hsl(30, 25%, 80%); }

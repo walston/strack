@@ -63,6 +63,7 @@ function makeTicker(ticker) {
   panelBody.classList.add('panel-body');
   sym.classList.add('h4');
   open.classList.add('h6');
+  name.classList.add('truncate');
 
   trigger.setAttribute('data-toggle', 'dropdown');
   sym.textContent = ticker.symbol;
