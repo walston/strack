@@ -28,22 +28,27 @@ function makeTicker(symbol, name, ask, bid, open, ticker_trend, eps, pe, m3, m4)
     }
   }
 
+  function numberize(string) {
+    return Number(string) || string;
+  }
+
   return {
     symbol: symbol,
     name: name,
-    ask: ask,
-    bid: bid,
-    open: open,
+    ask: numberize(ask),
+    bid: numberize(bid),
+    open: numberize(open),
     trend: ticker_trend,
-    eps: eps,
-    pe: pe,
-    ma50: m3,
-    ma200: m4,
+    eps: numberize(eps),
+    pe: numberize(pe),
+    ma50: numberize(m3),
+    ma200: numberize(m4),
     maCalculation: maCalculator(open, m3, m4)
   }
 }
 
 function Portfolio () {
+  var db
   function build(stocks) {
     if (!Array.isArray(stocks)) { stocks = new Array(stocks) };
     if ( !fileExists(DB_PATH) || fs.statSync(DB_PATH).mtime < (Date.now() - 180000)) {
@@ -59,6 +64,7 @@ function Portfolio () {
       var data = csv.parse(raw).map(function(datum) {
         return makeTicker.apply(new Object(), datum);
       });
+      db = data;
       makeDB(data)
     }
     else {
@@ -73,7 +79,7 @@ function Portfolio () {
   }
 
   function queryDB(stock) {
-    var db = JSON.parse(fs.readFileSync('./db').toString('utf8'));
+    if (!db) db = JSON.parse(fs.readFileSync('./db').toString('utf8'));
     return db.find(function(item) {
       return item.symbol.toUpperCase() == stock.toUpperCase();
     });
@@ -90,7 +96,7 @@ function Portfolio () {
   }
 
   function search(query) {
-    var db = JSON.parse(fs.readFileSync(DB_PATH).toString('utf8'))
+    if (!db) db = JSON.parse(fs.readFileSync(DB_PATH).toString('utf8'))
     return und.filter(db, function(stock) {
       return und.find(query, function(symbol) {
         var sym = (new RegExp(symbol, 'gi'));
