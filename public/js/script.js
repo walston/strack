@@ -134,6 +134,7 @@ document.getElementById('search').addEventListener('submit', function(e) {
   e.preventDefault();
   var query = document.getElementById('searchInput').value;
   if (!query.length) {
+    empty(header)
     updateFeed(sourceData);
   }
   else {
@@ -166,28 +167,30 @@ document.addEventListener('click', function(event) {
     sortData(sortSystem, lastData);
   }
   else if (method == 'add') {
-    null
-    // var ticker = parentWith('data-symbol', event.target);
-    // var symbol = ticker.getAttribute('data-symbol');
-    // watchlistAdd(symbol, target.getAttribute('data-list'));
+    var ticker = parentWith('data-symbol', target);
+    var symbol = ticker.getAttribute('data-symbol');
+    var list = target.getAttribute('data-list');
+    var ref = _.find(sourceData, function(stock) {
+      return stock.symbol == symbol;
+    });
+    var payload = [{
+      symbol: ref.symbol,
+      costPerShare: ref.bid,
+      fee: 7.95,
+      sharesHeld: 5
+    }];
+    $.ajax({
+      url: 'list/' + list,
+      type: 'PUT',
+      contentType: 'application/json',
+      data: JSON.stringify(payload),
+      success: listState
+    });
   }
   else if (method == 'view') {
     var list = target.getAttribute('data-list');
     $.get('list/' + list, listState);
   }
-  else if (method == 'watchlist') {
-    var stocks = {
-      symbols: userData.watchlists[target.getAttribute('data-list')].stocks
-    }
-    $.ajax({
-      url: 'fetch',
-      type: 'POST',
-      contentType: 'application/json',
-      data: JSON.stringify(stocks),
-      success: listState
-    });
-  }
-
 });
 
 var userData;

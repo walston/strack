@@ -44,7 +44,8 @@ gulp.task('client-js-lint', function() {
         'Promise': true
       },
       rules: {
-        'no-unused-vars': 1
+        'no-unused-vars': 1,
+        'no-redeclare': 1
       }
     }))
     .pipe(eslint.format())
