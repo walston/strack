@@ -166,13 +166,20 @@ function watchlistAdd(symbol, watchlist) {
   })
 }
 
-function purchaselistAdd(symbol, purchaselist) {
-  var stock = {
-    'symbol': symbol.toUpperCase(),
-    'cost': 20.25,
-    'shares': 5,
-    'fee': 7.95
+function purchaselistPrompt(symbol, purchaselist) {
+  var stock = _.find(sourceData, function(value) {
+    return value.symbol == symbol;
+  });
+  var additive = {
+    symbol: stock.symbol,
+    cost: Number(stock.bid),
+    shares: 5,
+    fee: 7.95
   };
+  purchaselistAdd(additive, purchaselist);
+}
+
+function purchaselistAdd(stock, purchaselist) {
   $.ajax({
     url: 'user/' + userData.username + '/purchaselist/' + purchaselist,
     type: 'POST',
@@ -230,7 +237,7 @@ document.addEventListener('click', function(event) {
   else if (method == 'purchaselistAdd') {
     var purchase = parentWith('data-symbol', event.target);
     var bought = purchase.getAttribute('data-symbol');
-    purchaselistAdd(bought, target.getAttribute('data-list'));
+    purchaselistPrompt(bought, target.getAttribute('data-list'));
   }
   else if (method == 'watchlist') {
     var watched = {
