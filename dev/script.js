@@ -79,7 +79,7 @@ function sortDropdown() {
     ma200: '200-day Moving Average',
     name: 'Name',
     open: 'Today\'s Open',
-    pe: 'Price/Earnings Ration',
+    pe: 'Price/Earnings Ratio',
     symbol: 'Ticker Symbol'
   }
   var parent = empty(document.getElementById('sortButton'));
