@@ -3,13 +3,26 @@ var header = document.getElementById('header');
 var sourceData;
 var lastData;
 
-function notifications (notice) {
-  var wrap = document.getElementById('alerter');
-  empty(wrap);
+function empty(element) {
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  }
+  return element;
+}
+
+function notifier(notice) {
+  var wrap = empty(document.getElementById('alerter'));
+  if (!notice) {
+    wrap.classList.add('hidden');
+    return null;
+  }
+  else {
+    wrap.classList.remove('hidden');
+  }
   var head = document.createElement('p');
   var note = document.createElement('p');
 
-  wrap.classlist.add('alert-' + notice.status);
+  wrap.classList.add('alert-' + notice.status);
   head.classList.add('h5');
 
   head.textContent = notice.heading;
@@ -17,6 +30,20 @@ function notifications (notice) {
 
   wrap.appendChild(head);
   wrap.appendChild(note);
+}
+
+function updateHeader(string) {
+  var head = empty(document.createElement('span'));
+  if (!string) {
+    head.classList.add('hidden');
+    return null;
+  }
+  else {
+    head.classList.remove('hidden');
+  }
+  head.classList.add('col-xs-12', 'h3');
+  head.textContent = string;
+  header.appendChild(head);
 }
 
 function dropdown(dataMethod) {
@@ -113,38 +140,12 @@ function makeTicker(ticker) {
   return container;
 }
 
-function listState(data) {
-  var notice;
-  if (data.notice) {
-    notice = data.notice;
-    data = data.data;
-  }
-  var heading = data.name;
-  updateHeader(heading);
-  var stocks = data.stocks;
-  updateFeed(stocks);
-}
-
-function updateHeader(string) {
-  empty(header);
-  var head = document.createElement('span');
-  head.classList.add('col-xs-12', 'h3');
-  head.textContent = string;
-  header.appendChild(head);
-}
-
 function updateFeed(data) {
   lastData = data;
   empty(feed);
   _.each(data, function(ticker) {
     feed.appendChild(makeTicker(ticker));
   });
-}
-
-function empty(element) {
-  while (element.firstChild) {
-    element.removeChild(element.firstChild);
-  }
 }
 
 function sortData(param, data, descending) {
@@ -163,6 +164,13 @@ function sortData(param, data, descending) {
   });
   if (descending === true) data.reverse();
   updateFeed(data);
+}
+
+function pageManager(data) {
+  notifier(data.notice)
+  updateHeader(data.name);
+  var stocks = data.stocks;
+  updateFeed(stocks);
 }
 
 document.getElementById('search').addEventListener('submit', function(e) {
@@ -219,12 +227,12 @@ document.addEventListener('click', function(event) {
       type: 'PUT',
       contentType: 'application/json',
       data: JSON.stringify(payload),
-      success: listState
+      success: pageManager
     });
   }
   else if (method == 'view') {
     var list = target.getAttribute('data-list');
-    $.get('list/' + list, listState);
+    $.get('list/' + list, pageManager);
   }
 });
 
