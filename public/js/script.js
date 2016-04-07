@@ -51,7 +51,8 @@ function makeTicker(ticker) {
   var dropdownMenu = dropdown('add');
   var sym = document.createElement('span');
   var name = document.createElement('p');
-  var open = document.createElement('span');
+  var open = document.createElement('p');
+  var value = document.createElement('p');
 
   container.setAttribute('data-symbol', ticker.symbol);
   container.classList.add('col-sm-3', 'col-xs-4', 'ticker');
@@ -62,13 +63,26 @@ function makeTicker(ticker) {
   icon.classList.add('fa', 'fa-caret-down');
   panelBody.classList.add('panel-body');
   sym.classList.add('h4');
-  open.classList.add('h6');
   name.classList.add('truncate');
+  open.classList.add('h6');
+  value.classList.add('h6');
 
   trigger.setAttribute('data-toggle', 'dropdown');
   sym.textContent = ticker.symbol;
   name.textContent = ticker.name;
   open.textContent = 'open: $' + Number(ticker.open).toFixed(2);
+  value.textContent = (function(x) {
+    if (x.sharesHeld){
+      return 'ROI: $' +
+        ((x.costPerShare * x.sharesHeld) -
+        (x.bid * x.sharesHeld) -
+        (x.fee * 2))
+        .toFixed(2);
+    }
+    else {
+      return null
+    }
+  })(ticker)
 
   panelHead.appendChild(sym);
   trigger.appendChild(icon);
@@ -77,6 +91,7 @@ function makeTicker(ticker) {
   panelHead.appendChild(dropdownContainer);
   panelBody.appendChild(name);
   panelBody.appendChild(open);
+  panelBody.appendChild(value);
   panel.appendChild(panelHead);
   panel.appendChild(panelBody);
   container.appendChild(panel);
