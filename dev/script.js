@@ -3,6 +3,22 @@ var header = document.getElementById('header');
 var sourceData;
 var lastData;
 
+function notifications (notice) {
+  var wrap = document.getElementById('alerter');
+  empty(wrap);
+  var head = document.createElement('p');
+  var note = document.createElement('p');
+
+  wrap.classlist.add('alert-' + notice.status);
+  head.classList.add('h5');
+
+  head.textContent = notice.heading;
+  note.textContent = notice.text;
+
+  wrap.appendChild(head);
+  wrap.appendChild(note);
+}
+
 function dropdown(dataMethod) {
   function watchlists (parent) {
     _.each(userData.lists, function(list) {
@@ -73,11 +89,9 @@ function makeTicker(ticker) {
   open.textContent = 'open: $' + Number(ticker.open).toFixed(2);
   value.textContent = (function(x) {
     if (x.sharesHeld){
-      return 'ROI: $' +
-        ((x.costPerShare * x.sharesHeld) -
-        (x.bid * x.sharesHeld) -
-        (x.fee * 2))
-        .toFixed(2);
+      var c = (x.costPerShare * x.sharesHeld);
+      var y = (x.bid * x.sharesHeld);
+      return 'ROI: ' + (((y - c ) / c) * 100).toFixed(3) + '%';
     }
     else {
       return null
@@ -100,6 +114,11 @@ function makeTicker(ticker) {
 }
 
 function listState(data) {
+  var notice;
+  if (data.notice) {
+    notice = data.notice;
+    data = data.data;
+  }
   var heading = data.name;
   updateHeader(heading);
   var stocks = data.stocks;
