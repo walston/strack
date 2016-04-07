@@ -1,3 +1,4 @@
+body { padding-top: 87px; }
 .navbar { border-radius: 0;}
 .panel { height: 170px !important; }
 .panel .dropdown { display: none; }
