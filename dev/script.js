@@ -70,6 +70,41 @@ function dropdown(dataMethod) {
   return container;
 }
 
+function sortDropdown() {
+  var sortSystems = {
+    ask: 'Ask',
+    bid: 'Bid',
+    eps: 'Earnings/Share',
+    ma50: '50-day Moving Average',
+    ma200: '200-day Moving Average',
+    name: 'Name',
+    open: 'Today\'s Open',
+    pe: 'Price/Earnings Ration',
+    symbol: 'Ticker Symbol'
+  }
+  var parent = empty(document.getElementById('sortButton'));
+  var trigger = document.createElement('a');
+  var menu = document.createElement('ul');
+  _.each(_.keys(sortSystems), function(method) {
+    var wrap = document.createElement('li');
+    var link = document.createElement('a');
+    link.setAttribute('data-method', 'sort');
+    link.setAttribute('data-sort', method);
+    link.setAttribute('data-desc', 'true');
+    link.textContent = sortSystems[method];
+    wrap.appendChild(link);
+    menu.appendChild(wrap);
+  });
+  parent.classList.add('dropdown');
+  trigger.classList.add('btn', 'btn-default', 'dropdown-toggle');
+  menu.classList.add('dropdown-menu');
+  trigger.setAttribute('data-toggle', 'dropdown');
+
+  trigger.textContent = 'Sort';
+  parent.appendChild(trigger);
+  parent.appendChild(menu);
+}
+
 function makeUserControls(container) {
   var controller = document.createElement('a');
   var username = document.createTextNode(userData.username + ' ');
@@ -249,6 +284,8 @@ $.get({
     makeUserControls(document.getElementById('userControls'));
   }
 });
+
+sortDropdown();
 
 $.get({
   url: 'fetch/all',
