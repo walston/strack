@@ -17,12 +17,12 @@ function notifier(notice) {
     return null;
   }
   else {
-    wrap.classList.remove('hidden');
+    wrap.className = '';
+    wrap.classList.add('alert', 'alert-' + notice.status);
   }
   var head = document.createElement('p');
   var note = document.createElement('p');
 
-  wrap.classList.add('alert-' + notice.status);
   head.classList.add('h5');
 
   head.textContent = notice.heading;
@@ -30,17 +30,21 @@ function notifier(notice) {
 
   wrap.appendChild(head);
   wrap.appendChild(note);
+  setTimeout(function() {
+    wrap.className = 'hidden'
+  }, 1000)
 }
 
 function updateHeader(string) {
-  var head = empty(document.createElement('span'));
+  var wrap = empty(document.getElementById('header'));
   if (!string) {
-    head.classList.add('hidden');
+    wrap.classList.add('hidden');
     return null;
   }
   else {
-    head.classList.remove('hidden');
+    wrap.classList.remove('hidden');
   }
+  var head = document.createElement('span');
   head.classList.add('col-xs-12', 'h3');
   head.textContent = string;
   header.appendChild(head);
@@ -141,6 +145,7 @@ function makeTicker(ticker) {
 }
 
 function updateFeed(data) {
+  if (!data) return null;
   lastData = data;
   empty(feed);
   _.each(data, function(ticker) {
@@ -167,10 +172,9 @@ function sortData(param, data, descending) {
 }
 
 function pageManager(data) {
-  notifier(data.notice)
+  notifier(data.notice);
   updateHeader(data.name);
-  var stocks = data.stocks;
-  updateFeed(stocks);
+  updateFeed(data.stocks);
 }
 
 document.getElementById('search').addEventListener('submit', function(e) {

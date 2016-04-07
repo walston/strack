@@ -5,6 +5,14 @@ body { padding-top: 87px; }
 .panel:hover .dropdown {
   display: block;
 }
+#alerter {
+  display: block;
+  position: absolute;
+  top: 90px;
+  right: 12px;
+  float: right;
+  z-index: 50;
+}
 .truncate {
   overflow: hidden;
   text-overflow: ellipsis;

@@ -54,7 +54,12 @@ router.put('/:id', jsonParser, function(req, res) {
   var list = getList(req.user, req.params.id);
   if (list) {
     list.stocks = und.union(list.stocks, req.body);
-    res.json(fulfill(list));
+    res.json({
+      notice: {
+        status: 'success',
+        text: 'Added ' + req.body[0].symbol + ' to ' + req.params.id
+      }
+    });
   }
   else {
     res.status(404).send('No list by name: ' + req.params.id);
