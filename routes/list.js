@@ -25,28 +25,71 @@ function fulfill(list) {
   return list;
 }
 
-router.get('/:id', function(req, res) {
-  var list = getList(req.user, req.params.id)
-  if (list) {
-    res.json(fulfill(list));
+router.post('/rename', jsonParser, function(req, res) {
+  var oldName = req.body.old;
+  var newName = req.body.new;
+  var list = getList(req.user, oldName);
+  if (getList(req.user, oldName) && !getList(req.user, newName)) {
+    list.name = newName;
+    res.status(200).json({
+      heading: {
+        pointer: 'lists',
+        source: list.name,
+        text: list.name
+      },
+      stocks: fulfill(list).stocks
+    });
   }
   else {
-    res.status(404).send('No list by name: ' + req.params.id);
+    res.status(409).json({
+      heading: {
+        pointer: 'lists',
+        source: list.name,
+        text: list.name
+      },
+      stocks: fulfill(list).stocks
+    });
   }
 });
 
-router.post('/:id', jsonParser, function(req, res) {
-  var id = req.params.id.toLowerCase();
-  if (getList(req.user, id) == undefined) {
-    var list = {
-      name: id,
-      stocks: req.body
+router.get('/create', function(req, res) {
+  var name = 'default';
+  if (!!getList(req.user, name)) {
+    var i;
+    while (!!getList(req.user, name + i)) {
+      i++
     }
-    req.user.lists.push(list);
-    res.json(fulfill(list));
+    name += i;
+  }
+  req.user.lists.push({
+    name: name,
+    stocks: []
+  });
+  var list = getList(req.user, name);
+  res.status(200).json({
+    heading: {
+      pointer: 'lists',
+      source: list.name,
+      text: list.name
+    },
+    stocks: fulfill(list).stocks
+  });
+});
+
+router.get('/:id', function(req, res) {
+  var list = getList(req.user, req.params.id)
+  if (list) {
+    res.json({
+      heading: {
+        pointer: 'lists',
+        source: list.name,
+        text: list.name
+      },
+      stocks: fulfill(list).stocks
+    });
   }
   else {
-    res.status(409).send('List "' + id + '" exists already');
+    res.status(404).send('No list by name: ' + req.params.id);
   }
 });
 

@@ -35,9 +35,9 @@ function notifier(notice) {
   }, 1000)
 }
 
-function updateHeader(string) {
+function updateHeader(info) {
   var wrap = empty(document.getElementById('header'));
-  if (!string) {
+  if (!info) {
     wrap.classList.add('hidden');
     return null;
   }
@@ -45,8 +45,11 @@ function updateHeader(string) {
     wrap.classList.remove('hidden');
   }
   var head = document.createElement('span');
+  head.setAttribute('data-method', 'edit');
+  head.setAttribute('data-pointer', info.pointer);
+  head.setAttribute('data-source', info.source)
   head.classList.add('col-xs-12', 'h3');
-  head.textContent = string;
+  head.textContent = info.text;
   header.appendChild(head);
 }
 
@@ -110,12 +113,18 @@ function makeUserControls(container) {
   var username = document.createTextNode(userData.username + ' ');
   var carat = document.createElement('i');
   var dropdownMenu = dropdown('view');
+  var addWatchlist = document.createElement('li');
+  var addLink = document.createElement('a');
 
   container.classList.add('dropdown');
   controller.classList.add('dropdown-toggle');
   carat.classList.add('fa', 'fa-caret-down');
   controller.setAttribute('data-toggle', 'dropdown');
+  addLink.setAttribute('data-method', 'create');
+  addLink.textContent = 'Add New...';
 
+  addWatchlist.appendChild(addLink);
+  dropdownMenu.appendChild(addWatchlist);
   container.appendChild(controller);
   controller.appendChild(username);
   controller.appendChild(carat);
@@ -206,9 +215,40 @@ function sortData(param, data, descending) {
   updateFeed(data);
 }
 
+function editable(element) {
+  var oldName = element.getAttribute('data-source');
+  var parent = element.parentNode;
+  var oldElement = element;
+  var newElement = document.createElement('form');
+  var group = document.createElement('div');
+  var input = document.createElement('input');
+  newElement.classList.add('col-xs-12');
+  group.classList.add('input-group', 'input-group-lg');
+  input.classList.add('form-control', 'h2');
+  input.setAttribute('value', oldElement.textContent);
+  input.setAttribute('data-pointer', element.getAttribute('data-pointer'));
+  input.setAttribute('data-source', element.getAttribute('data-source'));
+  group.appendChild(input);
+  newElement.appendChild(group);
+  parent.replaceChild(newElement, oldElement);
+
+  newElement.addEventListener('submit', function(e) {
+    e.preventDefault();
+    // just make a request to change the name
+    // url: list/rename/ {old: xxx, new: yyy}
+    $.ajax({
+      type: 'POST',
+      url: 'list/rename',
+      contentType: 'application/json',
+      data: JSON.stringify({ old: oldName, new: input.value }),
+      success: pageManager
+    })
+  });
+}
+
 function pageManager(data) {
   notifier(data.notice);
-  updateHeader(data.name);
+  updateHeader(data.heading);
   updateFeed(data.stocks);
 }
 
@@ -251,7 +291,6 @@ document.addEventListener('click', function(event) {
   else if (method == 'add') {
     var ticker = parentWith('data-symbol', target);
     var symbol = ticker.getAttribute('data-symbol');
-    var list = target.getAttribute('data-list');
     var ref = _.find(sourceData, function(stock) {
       return stock.symbol == symbol;
     });
@@ -262,7 +301,7 @@ document.addEventListener('click', function(event) {
       sharesHeld: 5
     }];
     $.ajax({
-      url: 'list/' + list,
+      url: 'list/' + target.getAttribute('data-list'),
       type: 'PUT',
       contentType: 'application/json',
       data: JSON.stringify(payload),
@@ -270,8 +309,19 @@ document.addEventListener('click', function(event) {
     });
   }
   else if (method == 'view') {
-    var list = target.getAttribute('data-list');
-    $.get('list/' + list, pageManager);
+    $.get({
+      url: 'list/' + target.getAttribute('data-list'),
+      success: pageManager
+    });
+  }
+  else if (method == 'create') {
+    $.ajax({
+      url: 'list/create',
+      success: pageManager
+    });
+  }
+  else if (method == 'edit') {
+    editable(target);
   }
 });
 
