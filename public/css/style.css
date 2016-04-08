@@ -19,12 +19,12 @@ body { padding-top: 87px; }
   white-space: nowrap;
 }
 .editable {
-  height: 37px !important; 
+  height: 37px !important;
   padding-left: 15px !important;
   margin-top: 23 !important;
   margin-bottom: 11.5px !important;
 }
-.ticker .great { background-color: hsl(90, 80%, 60%); }
-.ticker .good { background-color: hsl(60, 50%, 80%); }
-.ticker .ok { background-color: hsl(30, 25%, 80%); }
-.ticker .junk { background-color: hsl(0, 50%, 60%); }
+.ticker .great { background-color: hsl(90, 80%, 66%); }
+.ticker .good { background-color: hsl(65, 80%, 73%); }
+.ticker .ok { background-color: hsl(40, 80%, 70%); }
+.ticker .junk { background-color: hsl(5, 50%, 70%); }
