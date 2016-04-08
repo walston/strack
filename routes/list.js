@@ -89,7 +89,13 @@ router.get('/:id', function(req, res) {
     });
   }
   else {
-    res.status(404).send('No list by name: ' + req.params.id);
+    res.json({
+      notice: {
+        status: 'warning',
+        heading: 'error',
+        text: 'No watchlist ' + req.params.id
+      }
+    });
   }
 });
 
@@ -107,20 +113,6 @@ router.put('/:id', jsonParser, function(req, res) {
   else {
     res.status(404).send('No list by name: ' + req.params.id);
   }
-});
-
-router.delete('/:id', function(req, res) {
-  var list = getList(req.user, req.params.id);
-  if (list) {
-    req.user.lists = und.reject(req.user.lists, function(i) {
-      return i.name == req.params.id.toLowerCase();
-    });
-    res.status(200).send('List "' + req.params.id + '" removed.');
-  }
-  else {
-    res.status(404).send('Nothing to delete');
-  }
-
 });
 
 module.exports = router;

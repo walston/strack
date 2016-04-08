@@ -67,7 +67,7 @@ function dropdown(dataMethod) {
   }
   var container = document.createElement('ul');
   container.classList.add('dropdown-menu');
-  if (userData.lists.length > 0) {
+  if (userData && userData.lists.length > 0) {
     watchlists(container);
   }
   return container;
@@ -109,6 +109,7 @@ function sortDropdown() {
 }
 
 function makeUserControls(container) {
+  container = empty(container);
   var controller = document.createElement('a');
   var username = document.createTextNode(userData.username + ' ');
   var carat = document.createElement('i');
@@ -185,6 +186,11 @@ function makeTicker(ticker) {
   panel.appendChild(panelBody);
   container.appendChild(panel);
 
+  trigger.addEventListener('click', function() {
+    var old = $(dropdownContainer).children('ul')[0];
+    dropdownContainer.replaceChild(dropdown('add'), old);
+  });
+
   return container;
 }
 
@@ -234,8 +240,6 @@ function editable(element) {
 
   newElement.addEventListener('submit', function(e) {
     e.preventDefault();
-    // just make a request to change the name
-    // url: list/rename/ {old: xxx, new: yyy}
     $.ajax({
       type: 'POST',
       url: 'list/rename',
@@ -325,23 +329,24 @@ document.addEventListener('click', function(event) {
   }
 });
 
-var userData;
-$.get({
-  url: 'user/treezrppl2',
-  dataType: 'json',
-  success: function(payload) {
-    userData = payload;
-    makeUserControls(document.getElementById('userControls'));
-  }
-});
-
-sortDropdown();
-
 $.get({
   url: 'fetch/all',
   success: function(payload) {
     sourceData = payload;
     updateFeed(payload);
+    sortDropdown();
   },
   dataType: 'json'
 });
+
+var userData;
+setInterval(function() {
+  $.get({
+    url: 'user/treezrppl2',
+    dataType: 'json',
+    success: function(payload) {
+      userData = payload;
+      makeUserControls(document.getElementById('userControls'));
+    }
+  });
+}, 1000);
