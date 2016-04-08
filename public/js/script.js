@@ -224,7 +224,7 @@ function editable(element) {
   var input = document.createElement('input');
   newElement.classList.add('col-xs-12');
   group.classList.add('input-group', 'input-group-lg');
-  input.classList.add('form-control', 'h2');
+  input.classList.add('form-control', 'h2', 'editable');
   input.setAttribute('value', oldElement.textContent);
   input.setAttribute('data-pointer', element.getAttribute('data-pointer'));
   input.setAttribute('data-source', element.getAttribute('data-source'));

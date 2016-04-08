@@ -18,6 +18,12 @@ body { padding-top: 87px; }
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.editable {
+  height: 37px !important; 
+  padding-left: 15px !important;
+  margin-top: 23 !important;
+  margin-bottom: 11.5px !important;
+}
 .ticker .great { background-color: hsl(90, 80%, 60%); }
 .ticker .good { background-color: hsl(60, 50%, 80%); }
 .ticker .ok { background-color: hsl(30, 25%, 80%); }
