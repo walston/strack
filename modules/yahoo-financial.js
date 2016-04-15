@@ -48,24 +48,29 @@ function makeTicker(symbol, name, ask, bid, open, ticker_trend, eps, pe, m3, m4)
 }
 
 function Portfolio () {
-  var db
+  var db, _stocks;
   function build(stocks) {
+    _stocks = stocks;
     if (!Array.isArray(stocks)) { stocks = new Array(stocks) };
-    if ( !fileExists(DB_PATH) || fs.statSync(DB_PATH).mtime < (Date.now() - 180000)) {
-      debugger;
+    // if ( !fileExists(DB_PATH) || fs.statSync(DB_PATH).mtime < (Date.now() - 180000)) {
       request.get(YAHOO_FINANCE_URL +
         '?s=' + stocks.map(function(stock) {
           return stock['Symbol'];
         }).join('+') +
         '&f=' + DATAPOINTS ,
         apiHandler);
-    }
+    // }
   }
 
   function apiHandler(error, response, raw) {
     if (!error && response.statusCode == 200) {
       var data = csv.parse(raw).map(function(datum) {
-        return makeTicker.apply(new Object(), datum);
+        var ticker = makeTicker.apply(new Object(), datum);
+        ticker.sector = und.find(_stocks, function(_stock) {
+          debugger;
+          return ticker.symbol == _stock['Symbol'];
+        })['Sector'];
+        return ticker;
       });
       db = data;
       makeDB(data)
