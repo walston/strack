@@ -52,8 +52,11 @@ function Portfolio () {
   function build(stocks) {
     if (!Array.isArray(stocks)) { stocks = new Array(stocks) };
     if ( !fileExists(DB_PATH) || fs.statSync(DB_PATH).mtime < (Date.now() - 180000)) {
+      debugger;
       request.get(YAHOO_FINANCE_URL +
-        '?s=' + stocks.join('+') +
+        '?s=' + stocks.map(function(stock) {
+          return stock['Symbol'];
+        }).join('+') +
         '&f=' + DATAPOINTS ,
         apiHandler);
     }
