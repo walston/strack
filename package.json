@@ -4,8 +4,8 @@
   "description": "stra.ck is intended to be a visual representation of your holdings/watch-listings with easy sorting functionality.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack-dev-server"
+    "start": "node app",
+    "dev": "ENV=dev PORT=1337 node app"
   },
   "repository": {
     "type": "git",
