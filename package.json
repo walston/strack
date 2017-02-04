@@ -4,8 +4,8 @@
   "description": "stra.ck is intended to be a visual representation of your holdings/watch-listings with easy sorting functionality.",
   "main": "app.js",
   "scripts": {
-    "start": "node app",
-    "dev": "ENV=dev PORT=1337 node app"
+    "start": "CLIENT_FOLDER=$PWD/client node server/server.js",
+    "dev": "ENV=dev PORT=1337 CLIENT_FOLDER=$PWD/client node server/server.js"
   },
   "repository": {
     "type": "git",

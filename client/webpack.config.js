@@ -12,11 +12,11 @@ module.exports = {
     babelLoader
   ],
   entry: {
-    app: "./public/src/entry.js"
+    app: process.env.CLIENT_FOLDER + "/public/src/entry.js"
   },
   output: {
     publicPath: `localhost:${process.env.PORT || 8080}/js/`,
-    path: process.cwd() + "/public/js",
+    path: process.env.CLIENT_FOLDER + "/public/js",
     filename: 'bundle.js'
   }
 }

@@ -4,7 +4,7 @@ var webpackHotMiddleware = require('webpack-hot-middleware');
 var express = require('express');
 var router = express.Router();
 
-var config = require(process.cwd() + "/webpack.config.js")
+var config = require(process.env.CLIENT_FOLDER + "/webpack.config.js")
 var compiler = webpack(config)
 var middleware = webpackDevMiddleware(compiler, {
   path: "/",
