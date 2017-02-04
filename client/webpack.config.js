@@ -1,9 +1,8 @@
 var babelLoader = {
   test: /\.jsx?$/,
-  exclude: /node_modules/,
   loader: 'babel-loader',
   query: {
-    presets: ['latest']
+    presets: ['react', 'latest']
   }
 }
 
@@ -12,11 +11,11 @@ module.exports = {
     babelLoader
   ],
   entry: {
-    app: process.env.CLIENT_FOLDER + "/public/src/entry.js"
+    app: process.env.CLIENT_FOLDER + "/src/entry.js"
   },
   output: {
     publicPath: `localhost:${process.env.PORT || 8080}/js/`,
-    path: process.env.CLIENT_FOLDER + "/public/js",
+    path: process.env.CLIENT_FOLDER + "/dist/js",
     filename: 'bundle.js'
   }
 }

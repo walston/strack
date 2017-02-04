@@ -20,7 +20,7 @@ app.use('/list', list);
 
 app.use('/js', webpackBuilder);
 
-app.use(express.static(process.env.CLIENT_FOLDER + '/public/'));
+app.use(express.static(process.env.CLIENT_FOLDER + '/dist/'));
 app.listen(port, function(req, res, next) {
   console.log('Listening on: ' + port + '...');
 });
