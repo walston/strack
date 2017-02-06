@@ -1,15 +1,14 @@
-var babelLoader = {
+const webpack = require('webpack');
+
+var reactLoader = {
   test: /\.jsx?$/,
   loader: 'babel-loader',
   query: {
-    presets: ['react', 'latest']
+    presets: ['latest', 'react']
   }
 }
 
 module.exports = {
-  loaders: [
-    babelLoader
-  ],
   entry: {
     app: process.env.CLIENT_FOLDER + "/src/entry.js"
   },
@@ -17,5 +16,10 @@ module.exports = {
     publicPath: `localhost:${process.env.PORT || 8080}/js/`,
     path: process.env.CLIENT_FOLDER + "/dist/js",
     filename: 'bundle.js'
+  },
+  module: {
+    loaders: [
+      reactLoader
+    ]
   }
 }

@@ -35,6 +35,7 @@
     "babel-core": "^6.22.1",
     "babel-loader": "^6.2.10",
     "babel-preset-latest": "^6.22.0",
+    "babel-preset-react": "^6.22.0",
     "gulp-eslint": "^2.0.0",
     "gulp-nodemon": "^2.0.6",
     "webpack": "^1.14.0",
