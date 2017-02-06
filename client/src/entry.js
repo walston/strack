@@ -3,5 +3,5 @@ import ReactDom from 'react-dom'
 
 ReactDom.render(
   React.createElement('h2', null, 'Hello World!'),
-  document.getElementsByTagName('body')[0]
+  document.getElementById('ReactApp')
 )
