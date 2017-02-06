@@ -1,7 +1,16 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 
+const Nav = () => (
+  <nav className="navbar">
+    <ul className="navbar-nav">
+      <li>Hello</li>
+      <li>Hi</li>
+    </ul>
+  </nav>
+)
+
 ReactDom.render(
-  React.createElement('h2', null, 'Hello World!'),
+  <Nav/>,
   document.getElementById('ReactApp')
 )
